@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "noImplicitAny": true,
+    "noImplicitThis": false,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "target": "es5",
+    "noEmit": true,
+    "typeRoots": [
+      "src"
+    ],
+  }
+}

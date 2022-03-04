@@ -1,0 +1,22 @@
+{
+  "name": "@acme/components",
+  "version": "0.1.0",
+  "description": "A component library",
+  "author": "Jon Sakas <jon.sakas@gmail.com>",
+  "homepage": "https://github.com/jsakas/circle-monorepo#readme",
+  "license": "UNLICENSED",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jsakas/circle-monorepo.git"
+  },
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@acme/types": "^0.1.0",
+    "typescript": "^4.6.2",
+    "react": "18.0.0"
+  }
+}

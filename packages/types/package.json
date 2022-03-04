@@ -1,0 +1,14 @@
+{
+  "name": "@acme/types",
+  "version": "0.1.0",
+  "description": "Shared type declarations",
+  "author": "Jon Sakas <jon.sakas@gmail.com>",
+  "homepage": "https://github.com/jsakas/circle-monorepo#readme",
+  "license": "UNLICENSED",
+  "types": "src/index.d.ts",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jsakas/circle-monorepo.git"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "name": "circle-monorepo",
+  "private": true,
+  "workspaces": {
+    "packages": ["packages/*"]
+  },
+  "devDependencies": {
+    "lerna": "^4.0.0"
+  }
+}
