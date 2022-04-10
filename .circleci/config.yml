@@ -1,8 +1,68 @@
 version: 2.1
+
+orbs:
+  yarn:
+    commands:
+      cache-install:
+        steps:
+          - restore_cache:
+              name: Restore Yarn Package Cache
+              keys:
+                - yarn-packages-{{ checksum "yarn.lock" }}
+          - run:
+              name: Install Dependencies
+              command: yarn install --frozen-lockfile --cache-folder ~/.cache/yarn
+          - save_cache:
+              name: Save Yarn Package Cache
+              key: yarn-packages-{{ checksum "yarn.lock" }}
+              paths:
+                - ~/.cache/yarn
+  changed:
+    commands:
+      check-changed:
+        parameters:
+          ref:
+            default: "main"
+            type: string
+          dir:
+            default: "."
+            type: string
+        steps:
+          - run: 
+              name: Check for changes in directory <<parameters.dir>>
+              command: |
+                set +e
+                git diff --quiet HEAD <<parameters.ref>> -- <<parameters.dir>>
+                changed=$?
+                if [ "$changed" = "0" ]; then
+                  echo "No changes found in << parameters.dir >>, stopping pipeline..."
+                  circleci-agent step halt
+                else
+                  echo "Found changes in << parameters.dir >>, continuing pipeline..."
+                fi
+
 jobs:
-  build:
+  build-app-1:
     docker:
-      - image: alpine:3.7
+      - image: cimg/node:16.14.2
     steps:
       - checkout
-      - run: ls -al
+      - changed/check-changed:
+          dir: packages/web-app-1
+      - yarn/cache-install
+      - run: yarn workspace @acme/web-app-1 build
+  build-app-2:
+    docker:
+      - image: cimg/node:16.14.2
+    steps:
+      - checkout
+      - changed/check-changed:
+          dir: packages/web-app-2 
+      - yarn/cache-install
+      - run: yarn workspace @acme/web-app-2 build
+
+workflows:
+  main:
+    jobs:
+      - build-app-1
+      - build-app-2
