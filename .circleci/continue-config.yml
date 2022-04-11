@@ -1,0 +1,53 @@
+version: 2.1
+
+parameters:
+  web-app-1:
+    type: boolean
+    default: false
+  web-app-2:
+    type: boolean
+    default: false
+
+orbs:
+  yarn:
+    commands:
+      cache-install:
+        steps:
+          - restore_cache:
+              name: Restore Yarn Package Cache
+              keys:
+                - yarn-packages-{{ checksum "yarn.lock" }}
+          - run:
+              name: Install Dependencies
+              command: yarn install --frozen-lockfile --cache-folder ~/.cache/yarn
+          - save_cache:
+              name: Save Yarn Package Cache
+              key: yarn-packages-{{ checksum "yarn.lock" }}
+              paths:
+                - ~/.cache/yarn
+
+jobs:
+  build-app-1:
+    docker:
+      - image: cimg/node:16.14.2
+    steps:
+      - checkout
+      - yarn/cache-install
+      - run: yarn workspace @acme/web-app-1 build
+  build-app-2:
+    docker:
+      - image: cimg/node:16.14.2
+    steps:
+      - checkout
+      - yarn/cache-install
+      - run: yarn workspace @acme/web-app-2 build
+
+workflows:
+  build-app-1:
+    when: << pipeline.parameters.web-app-1 >>
+    jobs:
+      - build-app-1
+  build-app-2:
+    when: << pipeline.parameters.web-app-2 >>
+    jobs:
+      - build-app-2
