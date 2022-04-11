@@ -40,7 +40,12 @@ jobs:
     steps:
       - checkout
       - yarn/cache-install
-      - run: yarn workspace @acme/web-app-2 build
+      - run: yarn workspace @acme/web-app-2 build\
+  publish:
+    docker:
+      - image: cimg/node:16.14.2
+    steps:
+      - run: echo "Publish packages here!"
 
 workflows:
   build-app-1:
@@ -51,3 +56,6 @@ workflows:
     when: << pipeline.parameters.web-app-2 >>
     jobs:
       - build-app-2
+  publish:
+    jobs:
+      - publish
