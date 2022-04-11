@@ -1,7 +1,6 @@
 version: 2.1
 
-orbs: 
-  path-filtering: circleci/path-filtering@0.1.2
+orbs:
   yarn:
     commands:
       cache-install:
@@ -42,32 +41,18 @@ orbs:
                   echo "Found changes in << parameters.dir >>, continuing pipeline..."
                 fi
 
-# jobs:
-#   build-app-1:
-#     docker:
-#       - image: cimg/node:16.14.2
-#     steps:
-#       - checkout
-#       - changed/check-changed:
-#           dir: packages/web-app-1
-#       - yarn/cache-install
-#       - run: yarn workspace @acme/web-app-1 build
-#   build-app-2:
-#     docker:
-#       - image: cimg/node:16.14.2
-#     steps:
-#       - checkout
-#       - changed/check-changed:
-#           dir: packages/web-app-2 
-#       - yarn/cache-install
-#       - run: yarn workspace @acme/web-app-2 build
+jobs:
+  build-app-2:
+    docker:
+      - image: cimg/node:16.14.2
+    steps:
+      - checkout
+      - changed/check-changed:
+          dir: packages/web-app-2 
+      - yarn/cache-install
+      - run: yarn workspace @acme/web-app-2 build
 
 workflows:
   main:
     jobs:
-      - path-filtering/filter:
-          base-revision: main
-          config-path: packages/web-app-1/.circleci/config.yml
-      - path-filtering/filter:
-          base-revision: main
-          config-path: packages/web-app-2/.circleci/config.yml
+      - build-app-2
